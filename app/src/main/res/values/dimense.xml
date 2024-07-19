@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="nameTextSize">30sp</dimen>
+    <dimen name="pointSize">40dp</dimen>
+    <dimen name="pointTextSize">10sp</dimen>
+    <dimen name="playerNameLength">10</dimen>
+</resources>

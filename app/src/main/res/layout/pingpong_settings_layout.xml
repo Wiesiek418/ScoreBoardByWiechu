@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/pingpong_title"
+        android:textSize="@dimen/nameTextSize"/>
+    <EditText
+        android:id="@+id/playerOneName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/player_one_name"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/playerTwoName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/player_two_name"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/pointsToWinSets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/point_set_win"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/decidingSetPoints"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/deciding_set"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/setsToWin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/set_win"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/pingpongStartButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

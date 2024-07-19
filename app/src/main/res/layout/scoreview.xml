@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/scoreLayout"
+    android:layout_below="@+id/timeView"
+    android:layout_centerHorizontal="true">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nameLayout"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/leftName"
+            android:text="Guest1"
+            android:gravity="right"
+            android:layout_marginEnd="10dp"
+            android:textSize="@dimen/nameTextSize"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rightName"
+            android:text="Guest2"
+            android:gravity="left"
+            android:textSize="@dimen/nameTextSize"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scoreView"
+        android:layout_below="@id/nameLayout"
+        android:text="0:0"
+        android:textSize="50sp"
+        android:layout_centerHorizontal="true"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scoreView"
+        android:id="@+id/buttonPointsLayout"
+        android:layout_centerHorizontal="true"
+        >
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scorePlusLayout">
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/plusFirst"
+                android:layout_marginRight="10dp"
+                android:text="+1"/>
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/plusSecond"
+                android:text="+2"
+                android:layout_toRightOf="@+id/plusFirst"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scoreMinusLayout"
+            android:layout_below="@id/scorePlusLayout">
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/deleteFirst"
+                android:layout_marginRight="10dp"
+                android:text="-1"/>
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/deleteSecond"
+                android:text="-2"
+                android:layout_toRightOf="@+id/deleteFirst"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scoreView"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/finishLayout"
+        android:visibility="gone">
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/restart"
+            android:text="Restart"/>
+    </RelativeLayout>
+
+</RelativeLayout>
