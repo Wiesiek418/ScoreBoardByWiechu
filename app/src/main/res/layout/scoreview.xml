@@ -80,7 +80,23 @@
                 android:layout_height="100dp"
                 android:id="@+id/deleteSecond"
                 android:text="-2"
+                android:layout_marginRight="10dp"
                 android:layout_toRightOf="@+id/deleteFirst"/>
+            <!-- STOP TYMCZASOWY -->
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/Stop"
+                android:text="STOP"
+
+                android:layout_toRightOf="@+id/deleteSecond"/>
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/Start"
+                android:text="START"
+
+                android:layout_toRightOf="@+id/Stop"/>
         </RelativeLayout>
     </RelativeLayout>
 

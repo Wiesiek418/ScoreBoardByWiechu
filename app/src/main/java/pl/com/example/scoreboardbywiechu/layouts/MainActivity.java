@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity{
     private Button buttonMinusFirst;    //button to remove points from first player
     private Button buttonMinusSecond;   //button to remove points from second player\
 
+    private Button buttonStartTime;
+    private Button buttonStop;
+
     private Button buttonRestart;
 
     protected GameSettings gameSettings;    //object in which we have a game settings and his logic
@@ -84,6 +87,9 @@ public class MainActivity extends AppCompatActivity{
 
         leftNameView = findViewById(R.id.leftName);
         rightNameView = findViewById(R.id.rightName);
+
+        buttonStop = findViewById(R.id.Stop);
+        buttonStartTime = findViewById(R.id.Start);
     }
 
 
@@ -118,16 +124,14 @@ public class MainActivity extends AppCompatActivity{
             buttonPlusFirst.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    gameSettings.addPointTo(gameSettings.getPlayer(0),1);
-                    updateScore(gameSettings);
+                    addPoint(gameSettings.getPlayer(0));
                 }
             });
 
             buttonPlusSecond.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    gameSettings.addPointTo(gameSettings.getPlayer(1),1);
-                    updateScore(gameSettings);
+                    addPoint(gameSettings.getPlayer(1));
                 }
             });
 
@@ -147,6 +151,21 @@ public class MainActivity extends AppCompatActivity{
                 }
             });
 
+            //TODO: zrobic lepiej w layout bo narazie chaos
+            //START STOP buttons
+            buttonStop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gameTime.stopTime();
+                }
+            });
+            buttonStartTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gameTime.startTimeBeforeStop();
+                }
+            });
+
 
             //TODO: zrobic bardziej elastyczne
             leftPlayer=gameSettings.getPlayer(0);
@@ -161,8 +180,7 @@ public class MainActivity extends AppCompatActivity{
             buttonPlusFirst.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    gameSettings.addPointTo(gameSettings.getPlayer(0),1);
-                    updateScore(gameSettings);
+                    addPoint(gameSettings.getPlayer(0));
                 }
             });
 
@@ -188,7 +206,11 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-
+    protected void addPoint(Player player)
+    {
+        gameSettings.addPointTo(player,gameTime.getElapsedTime());
+        updateScore(gameSettings);
+    }
 
     private <T extends GameSettings> void updateScore(T game)
     {
@@ -296,15 +318,24 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    public void finishGame()
+    {
+        if(gameTime.isAlive())
+        {
+            gameTime.stopTime();
+        }
+
+        RelativeLayout bPL = findViewById(R.id.buttonPointsLayout);
+        bPL.setVisibility(View.GONE);
+
+        RelativeLayout relativeLayout = findViewById(R.id.finishLayout);
+        relativeLayout.setVisibility(View.VISIBLE);
+    }
 
     public void finishTime()
     {
         if(gameSettings.isEnd()) {
-            RelativeLayout bPL = findViewById(R.id.buttonPointsLayout);
-            bPL.setVisibility(View.GONE);
-
-            RelativeLayout relativeLayout = findViewById(R.id.finishLayout);
-            relativeLayout.setVisibility(View.VISIBLE);
+            finishGame();
         }
         else
         {

@@ -3,6 +3,8 @@ package pl.com.example.scoreboardbywiechu.games;
 import java.util.Random;
 import java.util.Vector;
 
+import pl.com.example.scoreboardbywiechu.elements.Player;
+
 public class Football extends GameSettings{
 
     private boolean flagRandomExtraTime = false;
@@ -15,6 +17,7 @@ public class Football extends GameSettings{
 
     private Vector penaltyScore;
     private boolean isPenaltyTime = false;
+    private boolean isGoldGoal = false;
 
     public Football()
     {
@@ -214,6 +217,7 @@ public class Football extends GameSettings{
                 if(isNextPart(1))
                 {
                     nextPart();
+                    isGoldGoal=true;
                     return false;
                 }
                 else
@@ -269,5 +273,19 @@ public class Football extends GameSettings{
         return 0;
     }
 
-    //TODO: penalties
+    //JAK TO ZROBIC ZEBY PRZY DOBRYCH WARUNKACH SKONCZYC ROZGRYWKE  (MOZE JAKIS BOOLEAN?)
+    @Override
+    public void addPointTo(Player player, double time) {
+        if(this.isPenaltyTime)
+            super.addPointTo(player, time);
+        else if(this.isGoldGoal)
+        {
+            super.addPointTo(player,time);
+
+        }
+        else
+        {
+
+        }
+    }
 }

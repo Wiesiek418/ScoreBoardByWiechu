@@ -10,16 +10,18 @@ public class GameTime extends Thread
     private MainActivity gameActivity;
 
     private long endTime;
-    private boolean isDone;
+    private boolean paused = false;
     private Handler handler;
     private long elapsedtime;
+    private long pausedTime=0;
+    private long startTime=0;
 
     public GameTime(MainActivity gameActivity,long endTimeInMillis)
     {
         this.gameActivity=gameActivity;
 
         this.endTime=endTimeInMillis;
-        this.isDone=false;
+
         this.handler=new Handler(Looper.getMainLooper());
 
     }
@@ -27,21 +29,28 @@ public class GameTime extends Thread
     //when we need change a end time
     public synchronized void changeEndTime(long extraTimeInMillis)
     {
-        if(!this.isDone)
-        {
-            this.endTime+=(extraTimeInMillis);
-        }
+        this.endTime+=(extraTimeInMillis);
     }
+
 
     public synchronized void stopTime()
     {
-        this.isDone=true;
+        if(!paused)
+        {
+            this.paused=true;
+            pausedTime=System.currentTimeMillis();
+        }
     }
-
     public synchronized void startTimeBeforeStop()
     {
-        this.isDone=false;
+        if(paused)
+        {
+            this.paused=false;
+            startTime+=(System.currentTimeMillis()-pausedTime);
+        }
+
     }
+
 
     public long getMinute()
     {
@@ -53,24 +62,27 @@ public class GameTime extends Thread
         return (elapsedtime/1000) % 60;
     }
 
+    public long getElapsedTime() {return elapsedtime;}
 
     //we get a endtime in constructor
     @Override
     public void run() {
-        long startTime = System.currentTimeMillis();
-
-        while(((System.currentTimeMillis()-startTime)<=endTime))
+        startTime = System.currentTimeMillis();
+        elapsedtime = 0;
+        while(elapsedtime<=endTime)
         {
-            synchronized (this)
+            if(!paused)
             {
-                elapsedtime = System.currentTimeMillis()-startTime;
+                synchronized (this)
+                {
+                    elapsedtime = System.currentTimeMillis()-startTime;
+                }
+
+                long minutes = (elapsedtime/1000) / 60;
+                long seconds = (elapsedtime/1000) % 60;
+
+                handler.post(()-> gameActivity.updateTimer(minutes,seconds));
             }
-            long minutes = (elapsedtime/1000) / 60;
-            long seconds = (elapsedtime/1000) % 60;
-
-
-            handler.post(()-> gameActivity.updateTimer(minutes,seconds));
-
 
             try
             {
@@ -80,10 +92,10 @@ public class GameTime extends Thread
             }
         }
 
-        synchronized(this)
-        {
-            this.isDone=true;
-        }
+        //synchronized(this)
+        //{
+        //    this.isDone=true;
+        //}
 
         handler.post(()->gameActivity.finishTime());
     }
