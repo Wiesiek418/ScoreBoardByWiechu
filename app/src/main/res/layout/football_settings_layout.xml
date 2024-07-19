@@ -30,6 +30,40 @@
         android:hint="@string/half_time_lenght"
         android:layout_marginTop="16dp"/>
 
+    <EditText
+        android:id="@+id/overtimeLenght"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/overtime_lenght"
+        android:layout_marginTop="16dp"/>
+
+    <CheckBox
+        android:id="@+id/extraTimeCheck"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/random_extra_time_check"/>
+
+    <CheckBox
+        android:id="@+id/overtimeCheck"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/random_extra_time_check"/>
+    <CheckBox
+        android:id="@+id/penaltiesCheck"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/random_extra_time_check"/>
+    <CheckBox
+        android:id="@+id/goldgoalCheck"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/random_extra_time_check"/>
+
+
     <Button
         android:id="@+id/footballStartButton"
         android:layout_width="wrap_content"

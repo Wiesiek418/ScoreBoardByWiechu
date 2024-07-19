@@ -11,13 +11,16 @@ public class Football extends GameSettings{
     private boolean flagOvertime = false;
     private boolean flagPenalties = false;
     private boolean flagGoldGoal = false;
-    static int[] CHANCE = {30,20,15,15,10,4,3,2,1};
-    //private static int[] CHANCE = {50,40,10};
+    //static int[] CHANCE = {30,20,15,15,10,4,3,2,1};
+    private static int[] CHANCE = {0,90,10};
     private long overtimeTimeMinute = 15;
 
     private Vector penaltyScore;
     private boolean isPenaltyTime = false;
     private boolean isGoldGoal = false;
+
+    private boolean isEnd=false;
+
 
     public Football()
     {
@@ -155,6 +158,7 @@ public class Football extends GameSettings{
         return this.flagRandomExtraTime;
     }
 
+    public boolean getIsEndFlag() {return isEnd;}
 
     public void randomExtraTime()
     {
@@ -273,19 +277,19 @@ public class Football extends GameSettings{
         return 0;
     }
 
-    //JAK TO ZROBIC ZEBY PRZY DOBRYCH WARUNKACH SKONCZYC ROZGRYWKE  (MOZE JAKIS BOOLEAN?)
     @Override
     public void addPointTo(Player player, double time) {
-        if(this.isPenaltyTime)
-            super.addPointTo(player, time);
-        else if(this.isGoldGoal)
+        if(!isEnd)
         {
-            super.addPointTo(player,time);
-
-        }
-        else
-        {
-
+            if(isGoldGoal)
+            {
+                super.addPointTo(player,time);
+                isEnd=true;
+            }
+            else
+            {
+                super.addPointTo(player,time);
+            }
         }
     }
 }

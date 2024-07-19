@@ -17,6 +17,7 @@ import pl.com.example.scoreboardbywiechu.games.GameSettings;
 //LAYOUT for football with specific methods
 public class FootballActivity extends MainActivity{
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,5 +79,12 @@ public class FootballActivity extends MainActivity{
         }
         textView.setText(timeView);
 
+    }
+
+    @Override
+    protected void addPoint(Player player) {
+        super.addPoint(player);
+        if(((Football) gameSettings).getIsEndFlag())
+            super.finishGame();
     }
 }

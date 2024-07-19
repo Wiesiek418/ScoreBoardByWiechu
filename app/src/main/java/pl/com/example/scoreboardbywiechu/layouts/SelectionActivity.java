@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,12 +62,42 @@ public class SelectionActivity extends AppCompatActivity {
 
 
         Button footballStartButton = footballView.findViewById(R.id.footballStartButton);
+
+        EditText player1Name = footballView.findViewById(R.id.playerOneName);
+        EditText player2Name = footballView.findViewById(R.id.playerTwoName);
+        EditText halfTime = footballView.findViewById(R.id.halfTimeLenght);
+        EditText overtimeTime = footballView.findViewById(R.id.overtimeLenght);
+
+        CheckBox randomExtraTimeCheck = footballView.findViewById(R.id.extraTimeCheck);
+        CheckBox overtimeCheck = footballView.findViewById(R.id.overtimeCheck);
+        CheckBox penaltiesCheck = footballView.findViewById(R.id.penaltiesCheck);
+        CheckBox goldgoalCheck = footballView.findViewById(R.id.goldgoalCheck);
+
+
+        //TODO: Dodac jeszcze dla innych opcji
+        goldgoalCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b)
+                {
+                    overtimeCheck.setChecked(false);
+                    overtimeCheck.setEnabled(false);
+                    penaltiesCheck.setEnabled(false);
+                    penaltiesCheck.setChecked(false);
+                }
+                else
+                {
+                    overtimeCheck.setEnabled(true);
+                    penaltiesCheck.setEnabled(true);
+                }
+            }
+        });
+
+
         footballStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText player1Name = footballView.findViewById(R.id.playerOneName);
-                EditText player2Name = footballView.findViewById(R.id.playerTwoName);
-                EditText halfTime = footballView.findViewById(R.id.halfTimeLenght);
+
                 //TODO: wykrywanie takich samych nazw i dlugosc nazwy
                 if (isCorrect(player1Name) && isCorrect(player2Name)) {
                     try {
@@ -73,6 +105,10 @@ public class SelectionActivity extends AppCompatActivity {
                         footballIntent.putExtra("p1", player1Name.getText().toString());
                         footballIntent.putExtra("p2", player2Name.getText().toString());
                         footballIntent.putExtra("ht", Integer.parseInt(halfTime.getText().toString()) * 60 * 1000);  //Convert text to miliseconds time
+                        footballIntent.putExtra("otT", Integer.parseInt(overtimeTime.getText().toString()) * 60 * 1000);  //Convert text to miliseconds time
+
+                        footballIntent.putExtra("retF",randomExtraTimeCheck.isChecked());
+
 
                         startActivity(footballIntent);
                     } catch (NumberFormatException e) {
