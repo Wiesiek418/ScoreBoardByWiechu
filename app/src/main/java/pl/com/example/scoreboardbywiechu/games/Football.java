@@ -268,4 +268,6 @@ public class Football extends GameSettings{
         }
         return 0;
     }
+
+    //TODO: penalties
 }
