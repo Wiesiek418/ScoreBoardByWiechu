@@ -1,6 +1,7 @@
-package pl.com.example.scoreboardbywiechu.layouts;
+package pl.com.example.scoreboardbywiechu.layouts.gameActivities;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -10,8 +11,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import pl.com.example.scoreboardbywiechu.R;
 import pl.com.example.scoreboardbywiechu.elements.Player;
-import pl.com.example.scoreboardbywiechu.games.Football;
-import pl.com.example.scoreboardbywiechu.games.GameSettings;
+import pl.com.example.scoreboardbywiechu.gamesSettings.FootballSettings;
 
 
 //LAYOUT for football with specific methods
@@ -42,11 +42,11 @@ public class FootballActivity extends MainActivity{
 
         if(goldGoalFlag)
         {
-            gameSettings = new Football(randomExtraTimeFlag,true);
+            gameSettings = new FootballSettings(randomExtraTimeFlag,true);
         }
         else
         {
-            gameSettings = new Football(randomExtraTimeFlag,overtimeFlag,penaltiesFlag,overtimeTime);
+            gameSettings = new FootballSettings(randomExtraTimeFlag,overtimeFlag,penaltiesFlag,overtimeTime);
         }
 
         gameSettings.addPlayer(new Player(p1Name));
@@ -64,7 +64,7 @@ public class FootballActivity extends MainActivity{
 
         if(minutes>=(gameSettings.getEndMinute()) && !gameSettings.getExtraTimeIsSet() && seconds >=(gameSettings.getEndSecond()-1) )
         {
-            ((Football) gameSettings).randomExtraTime();
+            ((FootballSettings) gameSettings).randomExtraTime();
             gameTime.changeEndTime(gameSettings.getExtraTime());
         }
 
@@ -81,10 +81,14 @@ public class FootballActivity extends MainActivity{
 
     }
 
+    //TODO: if is normal part do nothing
+    //If is a gold goal and it is the first goal in this part end game
+    //if is a penalty do penalty part
     @Override
     protected void addPoint(Player player) {
         super.addPoint(player);
-        if(((Football) gameSettings).getIsEndFlag())
+        if(((FootballSettings) gameSettings).getIsGoldGoal())    //co ja tutaj zrobilem ma wykrywac zlota pilke i jesli wpadl gol zakoncz gre
             super.finishGame();
+
     }
 }

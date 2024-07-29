@@ -1,7 +1,6 @@
-package pl.com.example.scoreboardbywiechu.layouts;
+package pl.com.example.scoreboardbywiechu.layouts.gameActivities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -17,12 +16,18 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import pl.com.example.scoreboardbywiechu.R;
-import pl.com.example.scoreboardbywiechu.games.Football;
-import pl.com.example.scoreboardbywiechu.games.GameSettings;
+import pl.com.example.scoreboardbywiechu.elements.PointsCalculator;
+import pl.com.example.scoreboardbywiechu.gamesSettings.GameSettings;
 import pl.com.example.scoreboardbywiechu.elements.GameTime;
 import pl.com.example.scoreboardbywiechu.elements.Player;
 import pl.com.example.scoreboardbywiechu.elements.Point;
+import pl.com.example.scoreboardbywiechu.layouts.SelectionActivity;
 
 public class MainActivity extends AppCompatActivity{
     final int LAST_SCORE=10;    //const number of displays last scored
@@ -43,11 +48,14 @@ public class MainActivity extends AppCompatActivity{
     private LinearLayout leftHistory;       //view to see last points of first player
     private LinearLayout rightHistory;      //view to see last points of second player
 
+
     private Player leftPlayer;              //info about first player
     private Player rightPlayer;             //info about second player
 
     private TextView leftNameView;          //view to display a name of first player
     private TextView rightNameView;         //view to display a name of second player
+
+    private PointsCalculator pointsCalculator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +73,8 @@ public class MainActivity extends AppCompatActivity{
         gameSettings = new GameSettings(2,2,10*1000);
         gameSettings.addPlayer(p1);
         gameSettings.addPlayer(p2);
+
+
 
         initializeViewElement();
         setLayout();
@@ -90,6 +100,9 @@ public class MainActivity extends AppCompatActivity{
 
         buttonStop = findViewById(R.id.Stop);
         buttonStartTime = findViewById(R.id.Start);
+
+        //temporary
+        pointsCalculator = new PointsCalculator(2,6,10,true,false,false,gameSettings.getPlayers(),this);
     }
 
 
@@ -99,6 +112,8 @@ public class MainActivity extends AppCompatActivity{
     protected void setLayout()
     {
         int players = gameSettings.getNumberOfPlayers();
+
+        pointsCalculator.setDisplayPoints();
 
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,29 +139,30 @@ public class MainActivity extends AppCompatActivity{
                 @Override
                 public void onClick(View view) {
                     addPoint(gameSettings.getPlayer(0));
+
                 }
             });
 
             buttonPlusSecond.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     addPoint(gameSettings.getPlayer(1));
+
                 }
             });
 
             buttonMinusFirst.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    gameSettings.removePointFrom(gameSettings.getPlayer(0));
-                    updateScore(gameSettings);
+                    removePoint(gameSettings.getPlayer(0));
                 }
             });
 
             buttonMinusSecond.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    gameSettings.removePointFrom(gameSettings.getPlayer(1));
-                    updateScore(gameSettings);
+                    removePoint(gameSettings.getPlayer(1));
                 }
             });
 
@@ -186,8 +202,7 @@ public class MainActivity extends AppCompatActivity{
             buttonMinusFirst.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    gameSettings.removePointFrom(gameSettings.getPlayer(0));
-                    updateScore(gameSettings);
+                    removePoint(gameSettings.getPlayer(0));
                 }
             });
 
@@ -205,31 +220,24 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+
+    //POINTS
     protected void addPoint(Player player)
     {
-        gameSettings.addPointTo(player,gameTime.getElapsedTime());
-        updateScore(gameSettings);
+        //gameSettings.addPointTo(player,gameTime.getElapsedTime());
+        pointsCalculator.addPointToPlayer(player,gameTime.getElapsedTime());
+        //updateScore(gameSettings);
+        pointsCalculator.displayScore();
     }
 
-    private <T extends GameSettings> void updateScore(T game)
+    protected void removePoint(Player player)
     {
-        int[] score = game.summaryScore();
-
-        TextView scoreText = findViewById(R.id.scoreView);
-        StringBuilder sb = new StringBuilder();
-
-        for(int i=0;i<score.length;i++)
-        {
-            if(i!=0)
-            {
-                sb.append(":");
-            }
-            sb.append(score[i]);
-        }
-        scoreText.setText(sb.toString());
-
-        displayLastScore(game);
+        //TODO: DODAC USUWANIE PUNKTOW
+        //gameSettings.removePointFrom(player);
+        //updateScore(gameSettings);
+        pointsCalculator.displayScore();
     }
+
 
     private <T extends GameSettings> void displayLastScore(T game)
     {
@@ -285,6 +293,9 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+
+    //TIMER
+
     private void startTime()
     {
         if(gameTime!=null)
@@ -300,6 +311,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
+    //to chyba do poprawy
     public void updateTimer(long minutes,long seconds)
     {
         TextView textView = findViewById(R.id.timeView);

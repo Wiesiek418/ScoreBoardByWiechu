@@ -3,7 +3,7 @@ package pl.com.example.scoreboardbywiechu.elements;
 import android.os.Handler;
 import android.os.Looper;
 
-import pl.com.example.scoreboardbywiechu.layouts.MainActivity;
+import pl.com.example.scoreboardbywiechu.layouts.gameActivities.MainActivity;
 
 public class GameTime extends Thread
 {
@@ -91,11 +91,6 @@ public class GameTime extends Thread
                 throw new RuntimeException(e);
             }
         }
-
-        //synchronized(this)
-        //{
-        //    this.isDone=true;
-        //}
 
         handler.post(()->gameActivity.finishTime());
     }

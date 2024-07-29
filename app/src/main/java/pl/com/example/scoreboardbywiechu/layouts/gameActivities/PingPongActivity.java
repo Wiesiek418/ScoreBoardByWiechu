@@ -1,4 +1,4 @@
-package pl.com.example.scoreboardbywiechu.layouts;
+package pl.com.example.scoreboardbywiechu.layouts.gameActivities;
 
 import android.os.Bundle;
 
@@ -9,8 +9,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import pl.com.example.scoreboardbywiechu.R;
 import pl.com.example.scoreboardbywiechu.elements.Player;
-import pl.com.example.scoreboardbywiechu.games.Football;
-import pl.com.example.scoreboardbywiechu.games.GameSettings;
+import pl.com.example.scoreboardbywiechu.gamesSettings.GameSettings;
 
 public class PingPongActivity extends MainActivity {
 

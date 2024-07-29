@@ -31,19 +31,12 @@
             android:textSize="@dimen/nameTextSize"/>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scoreView"
-        android:layout_below="@id/nameLayout"
-        android:text="0:0"
-        android:textSize="50sp"
-        android:layout_centerHorizontal="true"/>
+    <include layout="@layout/display_points"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/scoreView"
+        android:layout_below="@+id/displayLayout"
         android:id="@+id/buttonPointsLayout"
         android:layout_centerHorizontal="true"
         >

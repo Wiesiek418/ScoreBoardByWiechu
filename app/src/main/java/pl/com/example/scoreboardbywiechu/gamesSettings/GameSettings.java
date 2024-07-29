@@ -1,6 +1,11 @@
-package pl.com.example.scoreboardbywiechu.games;
+package pl.com.example.scoreboardbywiechu.gamesSettings;
 
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 import pl.com.example.scoreboardbywiechu.elements.Pair;
@@ -16,10 +21,14 @@ public class GameSettings {
     protected String nameOfGame = "Own Game";   //name of the game
     private Player[] playerVector;  //player vector in which we have players info
     private int currentPlayers=0;   //how many players we have in current game if the number of current players is less that number of players dont start the game
-    private Vector<Point> pointVector;
+
     protected long endTimeInMillis;
-    protected long extraTimeinMillis;
+    protected long extraTimeinMillis;       //nie lepiej dac tam gdzie potrzebne? moze zostac nie przeszkadza na razie
     protected boolean isSetExtraTime=false;
+
+    private Vector<Point> pointVector;  //TODO: jak to przebudowac zeby dzialalo dla wszystkich gier
+
+
     //public function sector
     public GameSettings(int numOfPlayers, int parts)
     {
@@ -89,6 +98,11 @@ public class GameSettings {
             return this.playerVector[i];
 
         return null;
+    }
+
+    public List<Player> getPlayers()
+    {
+        return Arrays.asList(playerVector);
     }
 
     public Point getIndexPointVector(int i)
@@ -202,7 +216,7 @@ public class GameSettings {
             if(playerVector[i].equals(player))
             {
                 playerVector[i].addPoints();    //add a point to the player class where we have a number of total points which player has
-                Point point = new Point(player,time,currentPart,playerVector[i].getPoints());
+                Point point = new Point(player,time,currentPart,currentPart,playerVector[i].getPoints());   //TODO: POPRAWIC
                 pointVector.add(point);
             }
         }
@@ -214,7 +228,7 @@ public class GameSettings {
         int counter=0;
         for(Point point: pointVector)
         {
-            if(player.equals(point.getPlayer())&&point.getPart()==part)
+            if(player.equals(point.getPlayer())&&point.getSet()==part)
                 counter++;
         }
         return counter;

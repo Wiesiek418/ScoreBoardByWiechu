@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.widget.Toast;
 
 import pl.com.example.scoreboardbywiechu.R;
+import pl.com.example.scoreboardbywiechu.layouts.gameActivities.FootballActivity;
+import pl.com.example.scoreboardbywiechu.layouts.gameActivities.PingPongActivity;
 
 public class SelectionActivity extends AppCompatActivity {
 
@@ -66,32 +68,17 @@ public class SelectionActivity extends AppCompatActivity {
         EditText player1Name = footballView.findViewById(R.id.playerOneName);
         EditText player2Name = footballView.findViewById(R.id.playerTwoName);
         EditText halfTime = footballView.findViewById(R.id.halfTimeLenght);
+        halfTime.setText("45");              //default values for halt time
+
         EditText overtimeTime = footballView.findViewById(R.id.overtimeLenght);
+        overtimeTime.setText("15");         //default values for halt time
 
         CheckBox randomExtraTimeCheck = footballView.findViewById(R.id.extraTimeCheck);
         CheckBox overtimeCheck = footballView.findViewById(R.id.overtimeCheck);
         CheckBox penaltiesCheck = footballView.findViewById(R.id.penaltiesCheck);
         CheckBox goldgoalCheck = footballView.findViewById(R.id.goldgoalCheck);
 
-
-        //TODO: Dodac jeszcze dla innych opcji
-        goldgoalCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b)
-                {
-                    overtimeCheck.setChecked(false);
-                    overtimeCheck.setEnabled(false);
-                    penaltiesCheck.setEnabled(false);
-                    penaltiesCheck.setChecked(false);
-                }
-                else
-                {
-                    overtimeCheck.setEnabled(true);
-                    penaltiesCheck.setEnabled(true);
-                }
-            }
-        });
+        setFootballCheckElements(overtimeCheck,goldgoalCheck,penaltiesCheck,overtimeTime);
 
 
         footballStartButton.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +96,9 @@ public class SelectionActivity extends AppCompatActivity {
 
                         footballIntent.putExtra("retF",randomExtraTimeCheck.isChecked());
 
+                        footballIntent.putExtra("otF",overtimeCheck.isChecked());
+                        footballIntent.putExtra("pF",penaltiesCheck.isChecked());
+                        footballIntent.putExtra("ggF",goldgoalCheck.isChecked());
 
                         startActivity(footballIntent);
                     } catch (NumberFormatException e) {
@@ -123,6 +113,62 @@ public class SelectionActivity extends AppCompatActivity {
         });
     }
 
+    private void setFootballCheckElements(CheckBox overtimeCheck,CheckBox goldgoalCheck,CheckBox penaltiesCheck, EditText overtimeTime)
+    {
+        //if goldgoal is checked unenabled a overtime and penalites
+        goldgoalCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked)
+                {
+                    overtimeCheck.setChecked(false);
+                    overtimeCheck.setEnabled(false);
+                    penaltiesCheck.setEnabled(false);
+                    penaltiesCheck.setChecked(false);
+
+                }
+                else
+                {
+                    overtimeCheck.setEnabled(true);
+                    penaltiesCheck.setEnabled(true);
+                }
+            }
+        });
+
+        //if overtime is checked unenabled a goldgoal
+        overtimeCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked)
+                {
+                    goldgoalCheck.setEnabled(false);
+                    goldgoalCheck.setChecked(false);
+                    overtimeTime.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    goldgoalCheck.setEnabled(true);
+                    overtimeTime.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        //if penalities is checked unenabled a goldgoal
+        penaltiesCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked)
+                {
+                    goldgoalCheck.setEnabled(false);
+                    goldgoalCheck.setChecked(false);
+                }
+                else
+                {
+                    goldgoalCheck.setEnabled(true);
+                }
+            }
+        });
+    }
     private void showPingPongSettings()
     {
         settingsContainer.removeAllViews();

@@ -1,11 +1,16 @@
 package pl.com.example.scoreboardbywiechu;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import pl.com.example.scoreboardbywiechu.games.Football;
-import pl.com.example.scoreboardbywiechu.games.GameSettings;
+import java.util.ArrayList;
+import java.util.List;
+
+import pl.com.example.scoreboardbywiechu.elements.PointsCalculator;
+import pl.com.example.scoreboardbywiechu.gamesSettings.FootballSettings;
+import pl.com.example.scoreboardbywiechu.gamesSettings.GameSettings;
 import pl.com.example.scoreboardbywiechu.elements.Player;
 
 /**
@@ -52,36 +57,39 @@ public class ExampleUnitTest {
     @Test
     public void createFootball()
     {
-        Football football = new Football();
-        assertEquals("Football",football.getNameOfGame());
+        FootballSettings footballSettings = new FootballSettings();
+        assertEquals("Football", footballSettings.getNameOfGame());
     }
 
     @Test
     public void setRandomExtraTime()
     {
-        Football football = new Football();
-        football.setFlagRandomExtraTime();
-        assertTrue(football.getFlagRandomExtraTime());
+        FootballSettings footballSettings = new FootballSettings();
+        footballSettings.setFlagRandomExtraTime();
+        assertTrue(footballSettings.getFlagRandomExtraTime());
     }
 
     @Test
     public void setRandomExtraTimeNumber()
     {
-        Football football = new Football();
-        football.randomExtraTime();
+        FootballSettings footballSettings = new FootballSettings();
+        footballSettings.randomExtraTime();
     }
 
     @Test
     public void workingTest()
     {
-        Football football = new Football(true);
+        FootballSettings footballSettings = new FootballSettings(true);
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
 
-        football.addPlayer(p1);
+        footballSettings.addPlayer(p1);
 
 
-        assertThrows(IllegalStateException.class,()->football.addPlayer(p2));
+        assertThrows(IllegalStateException.class,()-> footballSettings.addPlayer(p2));
 
     }
+
+
+
 }

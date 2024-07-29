@@ -1,28 +1,31 @@
-package pl.com.example.scoreboardbywiechu.games;
+package pl.com.example.scoreboardbywiechu.gamesSettings;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
 import pl.com.example.scoreboardbywiechu.elements.Player;
 
-public class Football extends GameSettings{
+public class FootballSettings extends GameSettings{
 
     private boolean flagRandomExtraTime = false;
     private boolean flagOvertime = false;
     private boolean flagPenalties = false;
-    private boolean flagGoldGoal = false;
+    private boolean flagGoldGoal = false;   //if is a draw add a gold goal part
     //static int[] CHANCE = {30,20,15,15,10,4,3,2,1};
     private static int[] CHANCE = {0,90,10};
     private long overtimeTimeMinute = 15;
 
     private Vector penaltyScore;
     private boolean isPenaltyTime = false;
-    private boolean isGoldGoal = false;
+    private boolean isGoldGoal = false; //current part is a gold goal
 
     private boolean isEnd=false;
 
 
-    public Football()
+
+    public FootballSettings()
     {
         super(2,2);
         super.endTimeInMillis=45*60*1000;
@@ -36,11 +39,11 @@ public class Football extends GameSettings{
     //fOT = Is it overtime?
     //fPen = Is it penalties if is draw?
     //fGG = Is it gold goal mode?
-    public Football(boolean fRandExtraTime,boolean fOT, boolean fPen, int overtimeTimeMinute)
+    public FootballSettings(boolean fRandExtraTime, boolean fOT, boolean fPen, int overtimeTimeMinute)
     {
         super(2,2);
         super.nameOfGame="Football";
-        this.overtimeTimeMinute=overtimeTimeMinute;
+        this.overtimeTimeMinute=overtimeTimeMinute;     //time of the one half of overtime
         this.flagRandomExtraTime=fRandExtraTime;
         this.flagOvertime=fOT;
         this.flagPenalties=fPen;
@@ -50,7 +53,7 @@ public class Football extends GameSettings{
         this.endTimeInMillis=45*60*1000;
     }
 
-    public Football(boolean fRandExtraTime,boolean fOT, boolean fPen)
+    public FootballSettings(boolean fRandExtraTime, boolean fOT, boolean fPen)
     {
 
         super(2,2);
@@ -65,7 +68,7 @@ public class Football extends GameSettings{
 
     }
 
-    public Football(boolean fRandExtraTime, boolean fGG)
+    public FootballSettings(boolean fRandExtraTime, boolean fGG)
     {
         super(2,2);
         super.nameOfGame="Football";
@@ -79,7 +82,7 @@ public class Football extends GameSettings{
         this.endTimeInMillis=45*60*1000;
     }
 
-    public Football(boolean fRandExtraTime)
+    public FootballSettings(boolean fRandExtraTime)
     {
         super(2,2,10);
         super.nameOfGame="Football";
@@ -160,6 +163,7 @@ public class Football extends GameSettings{
 
     public boolean getIsEndFlag() {return isEnd;}
 
+    public boolean getIsGoldGoal() {return isGoldGoal;}
     public void randomExtraTime()
     {
         if(this.flagRandomExtraTime)
@@ -185,7 +189,7 @@ public class Football extends GameSettings{
                     if(isNextPart(2))
                     {
                         //TODO:poprawic
-                        endTimeInMillis=endTimeInMillis/2;
+                        endTimeInMillis=overtimeTimeMinute;
                         nextPart();
                         return false;
                     }
@@ -222,6 +226,7 @@ public class Football extends GameSettings{
                 {
                     nextPart();
                     isGoldGoal=true;
+                    super.endTimeInMillis = Long.MAX_VALUE;
                     return false;
                 }
                 else
@@ -292,4 +297,6 @@ public class Football extends GameSettings{
             }
         }
     }
+
+
 }
