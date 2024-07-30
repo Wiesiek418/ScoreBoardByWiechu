@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity{
         buttonStartTime = findViewById(R.id.Start);
 
         //temporary
-        pointsCalculator = new PointsCalculator(2,6,10,true,false,false,gameSettings.getPlayers(),this);
+        pointsCalculator = new PointsCalculator(2,6,10,true,true,true,gameSettings.getPlayers(),this);
     }
 
 
@@ -171,13 +171,15 @@ public class MainActivity extends AppCompatActivity{
             buttonStop.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    gameTime.stopTime();
+                    pointsCalculator.deleteGem(gameSettings.getPlayer(0));
+                    pointsCalculator.displayScore();
                 }
             });
             buttonStartTime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    gameTime.startTimeBeforeStop();
+                    pointsCalculator.deleteSet(gameSettings.getPlayer(0));
+                    pointsCalculator.displayScore();
                 }
             });
 
@@ -235,6 +237,7 @@ public class MainActivity extends AppCompatActivity{
         //TODO: DODAC USUWANIE PUNKTOW
         //gameSettings.removePointFrom(player);
         //updateScore(gameSettings);
+        pointsCalculator.removePointFromPlayer(player);
         pointsCalculator.displayScore();
     }
 

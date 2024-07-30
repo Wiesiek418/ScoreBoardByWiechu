@@ -17,6 +17,7 @@ public class PointsCalculator {
     {
         private Player player;   //winner of the set
         private List<Gems> gemsList;
+        private int numOfSet;
 
         //przemysl jeszcze
         Sets(Point point)
@@ -30,20 +31,28 @@ public class PointsCalculator {
         {
             this.player = null;
             this.gemsList = new ArrayList<>();
+            this.numOfSet=0;
         }
 
         public void setWinner(Player player)
         {
             this.player=player;
+            this.numOfSet=player.getSets();
+        }
+        public Player getPlayer()
+        {
+            return this.player;
         }
         public List<Gems> getList() {return this.gemsList;}
+        public Player getPlayerFromList(int index){return this.gemsList.get(index).getPlayer();}
+        public int getNumOfSet(){return this.numOfSet;}
 
         public void addGem(Gems gems)
         {
             gemsList.add(gems);
         }
 
-        public void removeGemFromPlayer(Player player)
+        /*public void removeGemFromPlayer(Player player)
         {
             for (int i = this.gemsList.size() - 1; i >= 0; i--) {
                 if (this.gemsList.get(i).getPlayer().equals(player))
@@ -53,6 +62,18 @@ public class PointsCalculator {
                     return;
                 }
             }
+        }*/
+
+        public int gemsOfPlayer(Player player)
+        {
+            for(int i=gemsList.size()-1;i>=0;i--)
+            {
+                if(gemsList.get(i).getPlayer().equals(player))
+                {
+                    return gemsList.get(i).getNumOfGem();
+                }
+            }
+            return 0;
         }
 
     }
@@ -62,11 +83,13 @@ public class PointsCalculator {
     {
         private Player player;   //winner of the gem
         private List<Point> pointList;
+        private int numOfGem;
 
         Gems()
         {
             this.player = null;
             this.pointList = new ArrayList<>();
+            this.numOfGem=1;
         }
 
         //przemysl jeszcze
@@ -75,11 +98,13 @@ public class PointsCalculator {
             this.player = point.getPlayer();
             this.pointList = new ArrayList<>();
             this.pointList.add(point);
+            this.numOfGem = point.getPlayer().getGems();
         }
 
         public void setWinner(Player player)
         {
             this.player=player;
+            this.numOfGem=player.getGems();
         }
 
         public Player getPlayer()
@@ -87,21 +112,23 @@ public class PointsCalculator {
             return this.player;
         }
         public List<Point> getList() {return this.pointList;}
+        public Player getPlayerFromList(int index){return this.pointList.get(index).getPlayer();}
+        public int getNumOfGem(){return this.numOfGem;}
         public void addPoint(Point point)
         {
             pointList.add(point);
         }
 
-        public void removePointFromPlayer(Player player)
+        public int pointsOfPlayer(Player player)
         {
-            for (int i = this.pointList.size() - 1; i >= 0; i--) {
-                if (this.pointList.get(i).getPlayer().equals(player))
+            for(int i=pointList.size()-1;i>=0;i--)
+            {
+                if(pointList.get(i).getPlayer().equals(player))
                 {
-                    this.pointList.remove(i);
-                    player.deletePoints();
-                    return;
+                    return pointList.get(i).getNumPoint();
                 }
             }
+            return 0;
         }
 
     }
@@ -192,6 +219,65 @@ public class PointsCalculator {
         else
             normalPointsAdder(player,time);
     }
+
+
+    public void removePointFromPlayer(Player player)
+    {
+        if(!gemHistory.pointList.isEmpty())
+        {
+            deletePoint(player);
+        }
+        else if(!setHistory.gemsList.isEmpty())
+        {
+            deleteGem(player);
+        }
+        else if(!gameHistory.isEmpty())
+        {
+            deleteSet(player);
+        }
+
+    }
+
+
+    public void deletePoint(Player player)
+    {
+        int index = findLastIndex(gemHistory.pointList,player);
+
+        if(index!=-1)
+        {
+            gemHistory.pointList.remove(index);
+            player.deletePoints();
+        }
+
+    }
+
+
+    public void deleteGem(Player player)
+    {
+        int index = findLastIndex(setHistory.gemsList,player);
+        if(index!=-1)
+        {
+            //lastGemBack();
+            setHistory.gemsList.remove(index);
+            player.deleteGems();
+        }
+
+    }
+
+
+    public void deleteSet(Player player)
+    {
+
+        int index = findLastIndex(gameHistory,player);
+        if(index!=-1)
+        {
+            //lastSetBack();
+            //lastGemBack();
+            gameHistory.remove(index);
+            player.deleteSet();
+        }
+    }
+
 
     public void displayScore()
     {
@@ -340,6 +426,7 @@ public class PointsCalculator {
         }
     }
 
+    //TODO: zmien point (zamien currentSet i currentSet) bezuzyteczne
     private void addPoint(Player player,long time)
     {
         player.addPoints();
@@ -434,5 +521,49 @@ public class PointsCalculator {
         }
     }
 
+    //TODO: last poprawic albo usunac
+    //add to players points from the last gem
+    private void lastGemBack()
+    {
+        Sets lastSet = setHistory;
+        gemHistory = lastSet.gemsList.get(lastSet.gemsList.size()-1);
+        for(Player p: playerList)
+        {
+            p.setPoints(gemHistory.pointsOfPlayer(p));
+        }
+    }
+
+    //add to players gems from the last set
+    private void lastSetBack()
+    {
+        Sets lastSet = gameHistory.get(gameHistory.size()-1);
+        for(Player p: playerList)
+        {
+            p.setGems(lastSet.gemsOfPlayer(p));
+        }
+    }
+
+    private int findLastIndex(List<?> list,Player player)
+    {
+        for(int i = list.size()-1;i>=0;i--)
+        {
+            if(getPlayerFromList(list,i).equals(player))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private Player getPlayerFromList(List<?> list, int index) {
+        if (list == gemHistory.pointList) {
+            return gemHistory.getPlayerFromList(index);
+        } else if (list == setHistory.gemsList) {
+            return setHistory.getPlayerFromList(index);
+        } else if (list == gameHistory) {
+            return gameHistory.get(index).getPlayer();
+        }
+        return null;
+    }
 
 }

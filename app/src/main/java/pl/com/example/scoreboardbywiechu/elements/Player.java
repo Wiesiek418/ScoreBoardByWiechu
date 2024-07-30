@@ -81,4 +81,8 @@ public class Player {
         if(this.gems>0)
             this.gems--;
     }
+    public void deleteSet() {
+        if(this.sets>0)
+            this.sets--;
+    }
 }
