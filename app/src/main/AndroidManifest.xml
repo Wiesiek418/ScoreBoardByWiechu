@@ -24,12 +24,14 @@
         </activity>
         <activity
             android:name=".layouts.gameActivities.FootballActivity">
-
         </activity>
 
         <activity
             android:name=".layouts.gameActivities.PingPongActivity">
+        </activity>
 
+        <activity
+            android:name=".layouts.gameActivities.DefaultActivity">
         </activity>
     </application>
 

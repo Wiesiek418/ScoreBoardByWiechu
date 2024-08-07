@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import pl.com.example.scoreboardbywiechu.elements.Player;
+import pl.com.example.scoreboardbywiechu.elements.points.PointsCalculator;
 
 public class FootballSettings extends GameSettings{
 
@@ -17,12 +18,10 @@ public class FootballSettings extends GameSettings{
     private static int[] CHANCE = {0,90,10};
     private long overtimeTimeMinute = 15;
 
-    private Vector penaltyScore;
     private boolean isPenaltyTime = false;
     private boolean isGoldGoal = false; //current part is a gold goal
 
     private boolean isEnd=false;
-
 
 
     public FootballSettings()
@@ -179,7 +178,6 @@ public class FootballSettings extends GameSettings{
     public boolean isEnd()
     {
 
-
         if(currentPart>=numberOfParts)
         {
             if(this.flagOvertime)
@@ -245,7 +243,7 @@ public class FootballSettings extends GameSettings{
     //if is draw add extra parts (for overtime add 2 parts, for penalties 1 part, for gg 1 part)
     private boolean isNextPart(int extraParts)
     {
-        int[] score = summaryScore();
+        int[] score = pointsCalculator.getTheUpperScore();
         if(isDraw(score))
         {
             this.numberOfParts+=extraParts;
@@ -281,22 +279,5 @@ public class FootballSettings extends GameSettings{
         }
         return 0;
     }
-
-    @Override
-    public void addPointTo(Player player, double time) {
-        if(!isEnd)
-        {
-            if(isGoldGoal)
-            {
-                super.addPointTo(player,time);
-                isEnd=true;
-            }
-            else
-            {
-                super.addPointTo(player,time);
-            }
-        }
-    }
-
 
 }

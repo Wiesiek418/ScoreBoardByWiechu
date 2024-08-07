@@ -14,14 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/player_one_name"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/playerTwoName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:hint="@string/player_two_name"
-        android:layout_marginTop="16dp"/>
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/pointsToWinSets"
@@ -29,7 +31,8 @@
         android:layout_height="wrap_content"
         android:hint="@string/point_set_win"
         android:inputType="numberDecimal"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/decidingSetPoints"
@@ -37,7 +40,8 @@
         android:layout_height="wrap_content"
         android:hint="@string/deciding_set"
         android:inputType="numberDecimal"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/setsToWin"
@@ -45,12 +49,19 @@
         android:layout_height="wrap_content"
         android:hint="@string/set_win"
         android:inputType="numberDecimal"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"/>
 
-    <Button
-        android:id="@+id/pingpongStartButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/start"
-        android:layout_marginTop="16dp"/>
+        android:gravity="center_horizontal"
+        android:layout_marginTop="16dp">
+        <Button
+            android:id="@+id/pingpongStartButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start"
+            android:minHeight="48dp"/>
+    </LinearLayout>
 </LinearLayout>

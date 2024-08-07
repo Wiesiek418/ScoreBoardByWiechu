@@ -13,5 +13,8 @@
     <string name="invalid_number_error">Invalid time number. Please tap a decimal number</string>
     <string name="invalid_name_error">Invalid name. The player\'s name must be at least 5 words and cannot be empty.</string>
     <string name="random_extra_time_check">Random extra time?</string>
+    <string name="overtime_check">Overtime?</string>
+    <string name="penalty_check">Penalties?</string>
+    <string name="goldgoal_check">Gold goal?</string>
 
 </resources>

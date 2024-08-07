@@ -1,146 +1,32 @@
-package pl.com.example.scoreboardbywiechu.elements;
+package pl.com.example.scoreboardbywiechu.elements.points;
 
+import android.view.Gravity;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import pl.com.example.scoreboardbywiechu.R;
+import pl.com.example.scoreboardbywiechu.elements.Player;
 import pl.com.example.scoreboardbywiechu.layouts.gameActivities.MainActivity;
 
 public class PointsCalculator {
-
-
-    //Set (list of the gems in one set)
-    private class Sets
-    {
-        private Player player;   //winner of the set
-        private List<Gems> gemsList;
-        private int numOfSet;
-
-        //przemysl jeszcze
-        Sets(Point point)
-        {
-            this.player = point.getPlayer();
-            this.gemsList = new ArrayList<>();
-            this.gemsList.add(new Gems(point));
-        }
-
-        Sets()
-        {
-            this.player = null;
-            this.gemsList = new ArrayList<>();
-            this.numOfSet=0;
-        }
-
-        public void setWinner(Player player)
-        {
-            this.player=player;
-            this.numOfSet=player.getSets();
-        }
-        public Player getPlayer()
-        {
-            return this.player;
-        }
-        public List<Gems> getList() {return this.gemsList;}
-        public Player getPlayerFromList(int index){return this.gemsList.get(index).getPlayer();}
-        public int getNumOfSet(){return this.numOfSet;}
-
-        public void addGem(Gems gems)
-        {
-            gemsList.add(gems);
-        }
-
-        /*public void removeGemFromPlayer(Player player)
-        {
-            for (int i = this.gemsList.size() - 1; i >= 0; i--) {
-                if (this.gemsList.get(i).getPlayer().equals(player))
-                {
-                    this.gemsList.remove(i);
-                    player.deleteGems();
-                    return;
-                }
-            }
-        }*/
-
-        public int gemsOfPlayer(Player player)
-        {
-            for(int i=gemsList.size()-1;i>=0;i--)
-            {
-                if(gemsList.get(i).getPlayer().equals(player))
-                {
-                    return gemsList.get(i).getNumOfGem();
-                }
-            }
-            return 0;
-        }
-
-    }
-
-    //Gems (list of the points in one gem)
-    private class Gems
-    {
-        private Player player;   //winner of the gem
-        private List<Point> pointList;
-        private int numOfGem;
-
-        Gems()
-        {
-            this.player = null;
-            this.pointList = new ArrayList<>();
-            this.numOfGem=1;
-        }
-
-        //przemysl jeszcze
-        Gems(Point point)
-        {
-            this.player = point.getPlayer();
-            this.pointList = new ArrayList<>();
-            this.pointList.add(point);
-            this.numOfGem = point.getPlayer().getGems();
-        }
-
-        public void setWinner(Player player)
-        {
-            this.player=player;
-            this.numOfGem=player.getGems();
-        }
-
-        public Player getPlayer()
-        {
-            return this.player;
-        }
-        public List<Point> getList() {return this.pointList;}
-        public Player getPlayerFromList(int index){return this.pointList.get(index).getPlayer();}
-        public int getNumOfGem(){return this.numOfGem;}
-        public void addPoint(Point point)
-        {
-            pointList.add(point);
-        }
-
-        public int pointsOfPlayer(Player player)
-        {
-            for(int i=pointList.size()-1;i>=0;i--)
-            {
-                if(pointList.get(i).getPlayer().equals(player))
-                {
-                    return pointList.get(i).getNumPoint();
-                }
-            }
-            return 0;
-        }
-
-    }
-
-
+    //TODO: w miare ogarniety syf teraz czas na wieksze porzadki i rozwoj dalszy
     // SETS>>GEM>>POINTS
-    private final int LAST_SCORE = 7;
+    // USUNAC POZOSTALOSCI PO STARYCH PUNKTACH
+    private final int LAST_SCORE = 5;
     private int advantagesLimit = 2;
 
+    private byte gameMode;          //game mode - binary number (xyz) x-bit "set mode on/off"; y-bit "gem mode on/off"; z-bit "point mode on/off"
+
+    private boolean setMode;
     private boolean gemsMode;
     private boolean pointsMode;
-    private boolean setsMode;
+
 
     private boolean playWithAdvantages;
     private int maxPointsLimit=10;    //how many sets you need to win a game
@@ -149,6 +35,7 @@ public class PointsCalculator {
 
     private short pointsCountMode;      //0 - normal mode 1,2,3,...maxPoints; 1 - tennis mode 0,15,30,40,45; 2 - idk (maybe basketball mode)
 
+    //TODO: do dodania
     private boolean tiebreakMode;       //true - is 6-6 and you have to play tiebreak, false - is not time for tiebreak
 
     private List<Sets> gameHistory;
@@ -158,46 +45,89 @@ public class PointsCalculator {
     //maybe add a only two player (two player limiter)
     private List<Player> playerList;
 
-    private int currentGem=0;
-    private int currentSet=0;
-
     private MainActivity mainActivity;
 
-    /*
-    TODO:
-        historia teraz tutaj a nie w innych miejscach
-        musze wszystko ladnie posprzatac
-        bo syf
-    */
-
-
-    //TODO: dodac usuwanie punktow
-    public PointsCalculator(int maxSets,int maxGems,int maxPoints, boolean setsMode, boolean gemsMode, boolean pointsMode, List<Player> playerList,MainActivity mainActivity)
+    public PointsCalculator()
     {
+        this.gameMode = 0b111;
+        setGameMode(this.gameMode);
+
+        this.maxSetsLimit = Integer.MAX_VALUE;
+        this.maxGemsLimit = Integer.MAX_VALUE;
+        this.maxPointsLimit = Integer.MAX_VALUE;
+
+        this.playerList = null;
+
+        gemHistory = new Gems();
+        gameHistory = new ArrayList<>();
+        setHistory = new Sets();
+
+
+        playWithAdvantages=false;
+
+        this.mainActivity = null;
+    }
+
+
+    //TODO: poprawic konstruktor
+    //game mode - binary number (xyz) x-bit "set mode on/off"; y-bit "gem mode on/off"; z-bit "point mode on/off"
+    public PointsCalculator(int maxSets,int maxGems,int maxPoints, byte gameMode, List<Player> playerList, MainActivity mainActivity)
+    {
+        //ARGUMENT CHECKER
+        if(gameMode < 0 || gameMode > 7)
+        {
+            throw new IllegalArgumentException("Illegal game mode number. Accept only 3 bit numbers");
+        }
+
+        //GAME MODE CONFIG
+        setGameMode(gameMode);
+
+        //LIMITER
         this.maxSetsLimit = maxSets;
         this.maxGemsLimit = maxGems;
-        this.setsMode = setsMode;
-        this.gemsMode = gemsMode;
-        this.pointsMode = pointsMode;
+        this.maxPointsLimit = maxPoints;
+
 
         this.playerList = playerList;
 
         gemHistory = new Gems();
         gameHistory = new ArrayList<>();
         setHistory = new Sets();
-        playWithAdvantages=true;   //temporary
+
+
+        playWithAdvantages=false;
 
         this.mainActivity = mainActivity;
+    }
+
+    public void setGameMode(byte gameMode)
+    {
+        this.gameMode = gameMode;
+        this.setMode = (gameMode & 0b100) != 0;
+        this.gemsMode = (gameMode & 0b010) != 0;
+        this.pointsMode = (gameMode & 0b001) != 0;
+    }
+
+    public void setAdvantagesLimit(int limit)
+    {
+        this.advantagesLimit=limit;
+    }
+    public void setAdvantages(boolean mode)
+    {
+        this.playWithAdvantages=mode;
     }
 
     //nie lepiej jakby znikaly dodatkowe wyswietlacze od dolu to znaczy ze jak mamy tylko punkty to beda one dzialac jako sety?
     public void setDisplayPoints()
     {
+        if(mainActivity==null)
+            throw new IllegalStateException("MainActivity variable is null");
+
         TextView setView = mainActivity.findViewById(R.id.setView);
         TextView gemView = mainActivity.findViewById(R.id.gemView);
         TextView pointsView = mainActivity.findViewById(R.id.pointsView);
 
-        if(setsMode)
+        if(setMode)
             setView.setVisibility(View.VISIBLE);
         else
             setView.setVisibility(View.GONE);
@@ -212,10 +142,47 @@ public class PointsCalculator {
         else
             pointsView.setVisibility(View.GONE);
     }
+
+
+    public int[] getTheUpperScore()
+    {
+        int sizeList = playerList.size();
+        int score[] = new int[sizeList];
+        if(setMode)
+        {
+            for(int i=0;i<sizeList;i++)
+            {
+                score[i] = playerList.get(i).getSets();
+            }
+            return score;
+        }
+        else if(gemsMode)
+        {
+            for(int i=0;i<sizeList;i++)
+            {
+                score[i] = playerList.get(i).getGems();
+            }
+            return score;
+        }
+        else if(pointsMode)
+        {
+            for(int i=0;i<sizeList;i++)
+            {
+                score[i] = playerList.get(i).getPoints();
+            }
+            return score;
+        }
+        return null;
+    }
+
+
     public void addPointToPlayer(Player player, long time)
     {
+        if(playerList==null)
+            throw new IllegalStateException("PlayerList variable is null");
+
         if(pointsCountMode==1)
-            tennisPointsAdder(player,time);
+            tennisPointsAdder(player,time); //not yet TODO soon
         else
             normalPointsAdder(player,time);
     }
@@ -223,11 +190,11 @@ public class PointsCalculator {
 
     public void removePointFromPlayer(Player player)
     {
-        if(!gemHistory.pointList.isEmpty())
+        if(!gemHistory.getList().isEmpty())
         {
             deletePoint(player);
         }
-        else if(!setHistory.gemsList.isEmpty())
+        else if(!setHistory.getList().isEmpty())
         {
             deleteGem(player);
         }
@@ -241,11 +208,11 @@ public class PointsCalculator {
 
     public void deletePoint(Player player)
     {
-        int index = findLastIndex(gemHistory.pointList,player);
+        int index = findLastIndex(gemHistory.getList(),player);
 
         if(index!=-1)
         {
-            gemHistory.pointList.remove(index);
+            gemHistory.getList().remove(index);
             player.deletePoints();
         }
 
@@ -254,11 +221,11 @@ public class PointsCalculator {
 
     public void deleteGem(Player player)
     {
-        int index = findLastIndex(setHistory.gemsList,player);
+        int index = findLastIndex(setHistory.getList(),player);
         if(index!=-1)
         {
             //lastGemBack();
-            setHistory.gemsList.remove(index);
+            setHistory.getList().remove(index);
             player.deleteGems();
         }
 
@@ -281,11 +248,15 @@ public class PointsCalculator {
 
     public void displayScore()
     {
+        if(mainActivity==null)
+            throw new IllegalStateException("MainActivity variable is null");
+
+        displayLastScoreHistory((short) 0);         //test
         TextView setsView;
         TextView gemView;
         TextView pointsView;
 
-        if(setsMode)
+        if(setMode)
         {
             setsView = mainActivity.findViewById(R.id.setView);
             StringBuilder sb = new StringBuilder();
@@ -332,11 +303,73 @@ public class PointsCalculator {
         }
     }
 
+    //TODO: do poprawy kiedys
     public void displayLastScoreHistory(short modeDisplay)    //modeDisplay: 0-points; 1-gems; 2-sets
     {
-        List<?> history = null;
+        if(mainActivity==null)
+            throw new IllegalStateException("MainActivity variable is null");
 
-        switch (modeDisplay)
+        mainActivity.leftHistory.removeAllViews();
+        mainActivity.rightHistory.removeAllViews();
+        List<?> history = getListScore(modeDisplay);
+
+        //TODO: wyswietlanie zrobic w main activity albo jakiejs nowej klasie
+        //      chce aby w point calculator bylo wszystko co zwiazane z liczeniem wyniku a nie wyswietlaniem go
+        int sizeOfList = history.size();
+        int howManyLastPoints = Math.min(LAST_SCORE,sizeOfList);
+
+        for(int i=sizeOfList-1;i>=(sizeOfList-howManyLastPoints);i--)
+        {
+            Point point = getPoint(history,i);
+            if(point==null)
+                break;
+
+            TextView scoreView = new TextView(mainActivity);
+            TextView scoreViewBlank = new TextView(mainActivity);
+
+            scoreView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+
+            scoreViewBlank.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+
+            scoreView.setBackgroundColor(ContextCompat.getColor(mainActivity,R.color.scorePoint));
+            int size = mainActivity.getResources().getDimensionPixelSize(R.dimen.pointSize);
+
+            scoreView.getLayoutParams().height=size;
+            scoreView.getLayoutParams().width=size;
+            scoreViewBlank.getLayoutParams().height=size;
+            scoreViewBlank.getLayoutParams().width=size;
+
+            scoreView.setText(String.valueOf(point.getNumPoint()));
+            scoreView.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+            scoreView.setGravity(Gravity.CENTER);
+
+
+            //TODO: poprawic jakos
+            if(point.getPlayer().equals(mainActivity.leftPlayer))
+            {
+                mainActivity.leftHistory.addView(scoreView);
+                mainActivity.rightHistory.addView(scoreViewBlank);
+            }
+            else
+            {
+                mainActivity.rightHistory.addView(scoreView);
+                mainActivity.leftHistory.addView(scoreViewBlank);
+            }
+        }
+
+    }
+
+    private List<?> getListScore(short mode)
+    {
+        List<?> history;
+
+        switch (mode)
         {
             case 0:
                 history = gemHistory.getList();
@@ -348,8 +381,24 @@ public class PointsCalculator {
                 history = gameHistory;
                 break;
         }
+        return history;
+    }
 
-
+    private Point getPoint(List<?> history, int index)
+    {
+        if(history==gemHistory.getList())
+        {
+            return gemHistory.getList().get(index);
+        }
+        else if(history == setHistory.getList())
+        {
+            return setHistory.getList().get(index).getWinnerPoint();
+        }
+        else if(history == gameHistory)
+        {
+            return gameHistory.get(index).getWinnerPoint();
+        }
+        return null;
     }
 
     //TODO: dopracowac game mode czyli wybor czy tylko sety, czy sety i punkty, czy sety i gemy itp
@@ -362,17 +411,14 @@ public class PointsCalculator {
             {
                 Player findPlayer = playerList.get(i);
 
-                if(!gemsMode&&!pointsMode)
-                    addSet(findPlayer);    //add a point to the player
-                else if(!pointsMode)
-                    addGem(findPlayer);
+                if((gameMode&0b001) != 0)
+                    addPoint(findPlayer,time);  //add a point to the player
+                else if((gameMode&0b010) != 0)
+                    addGem(findPlayer,time);    //add a gem to the player if point is disabled
                 else
-                {
-                    addPoint(findPlayer,time);
-                    return;
-                }
+                    addSet(findPlayer,time);    //add a set to the player if gem is disabled
 
-
+                return;
             }
         }
     }
@@ -386,7 +432,7 @@ public class PointsCalculator {
             {
                 Player findPlayer = playerList.get(i);
                 addTennisPointToPlayer(findPlayer);
-                Point point = new Point(player,time,currentSet,currentGem,findPlayer.getPoints());
+                Point point = new Point(player,time,findPlayer.getPoints());
                 gemHistory.addPoint(point);
 
                 //check if is end
@@ -426,11 +472,13 @@ public class PointsCalculator {
         }
     }
 
-    //TODO: zmien point (zamien currentSet i currentSet) bezuzyteczne
+
+    //TODO:: dodac przypadek jakby nie bylo posredniego
+    //Only add point to point counter
     private void addPoint(Player player,long time)
     {
         player.addPoints();
-        Point point = new Point(player,time,currentSet,currentGem,player.getPoints());  //to change (do more elastic for the every adder)
+        Point point = new Point(player,time,player.getPoints());
         gemHistory.addPoint(point);
 
         if(player.getPoints()>=maxPointsLimit)
@@ -450,15 +498,16 @@ public class PointsCalculator {
 
             if(hasAdvantages)   //if is winner add gems and end this part
             {
-                addGem(player);
+                addGem(player,time);
             }
         }
     }
 
-    private void addGem(Player player)
+    private void addGem(Player player,long time)
     {
+
         player.addGems();
-        gemHistory.setWinner(player);
+        gemHistory.setWinner(player,time);
         setHistory.addGem(gemHistory);
         gemHistory=new Gems();
         clearPointsOfPlayers();
@@ -482,15 +531,15 @@ public class PointsCalculator {
 
             if(advantages)
             {
-                addSet(player);
+                addSet(player,time);
             }
         }
     }
 
-    private void addSet(Player player)
+    private void addSet(Player player,long time)
     {
         player.addSets();
-        setHistory.setWinner(player);
+        setHistory.setWinner(player,time);
         setHistory.addGem(gemHistory);
         gameHistory.add(setHistory);
         gemHistory=new Gems();
@@ -526,7 +575,7 @@ public class PointsCalculator {
     private void lastGemBack()
     {
         Sets lastSet = setHistory;
-        gemHistory = lastSet.gemsList.get(lastSet.gemsList.size()-1);
+        gemHistory = lastSet.getList().get(lastSet.getList().size()-1);
         for(Player p: playerList)
         {
             p.setPoints(gemHistory.pointsOfPlayer(p));
@@ -556,14 +605,16 @@ public class PointsCalculator {
     }
 
     private Player getPlayerFromList(List<?> list, int index) {
-        if (list == gemHistory.pointList) {
+        if (list == gemHistory.getList()) {
             return gemHistory.getPlayerFromList(index);
-        } else if (list == setHistory.gemsList) {
+        } else if (list == setHistory.getList()) {
             return setHistory.getPlayerFromList(index);
         } else if (list == gameHistory) {
             return gameHistory.get(index).getPlayer();
         }
         return null;
     }
+
+
 
 }

@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.widget.Toast;
 
 import pl.com.example.scoreboardbywiechu.R;
+import pl.com.example.scoreboardbywiechu.layouts.gameActivities.DefaultActivity;
 import pl.com.example.scoreboardbywiechu.layouts.gameActivities.FootballActivity;
 import pl.com.example.scoreboardbywiechu.layouts.gameActivities.PingPongActivity;
 
@@ -187,7 +188,8 @@ public class SelectionActivity extends AppCompatActivity {
                 EditText decidingSetPoints = pingpongView.findViewById(R.id.decidingSetPoints);
                 EditText setsToWin = pingpongView.findViewById(R.id.setsToWin);
 
-                Intent pingpongIntent = new Intent(SelectionActivity.this, PingPongActivity.class);
+                //TODO: do zmiany pozniej po testach
+                Intent pingpongIntent = new Intent(SelectionActivity.this, DefaultActivity.class);
                 pingpongIntent.putExtra("p1",player1Name.getText().toString());
                 pingpongIntent.putExtra("p2",player2Name.getText().toString());
                 pingpongIntent.putExtra("ptws",pointsToWinSet.getText().toString());
@@ -205,9 +207,7 @@ public class SelectionActivity extends AppCompatActivity {
         //TODO: Add word correctness verification
         try{
             String text = et.getText().toString();
-            if(text==null || text.trim().isEmpty())
-                return false;
-            return true;
+            return !text.trim().isEmpty();
         }
         catch (Error e)
         {

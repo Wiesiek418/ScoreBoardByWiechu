@@ -11,7 +11,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import pl.com.example.scoreboardbywiechu.R;
 import pl.com.example.scoreboardbywiechu.elements.Player;
+import pl.com.example.scoreboardbywiechu.elements.points.PointsCalculator;
 import pl.com.example.scoreboardbywiechu.gamesSettings.FootballSettings;
+import pl.com.example.scoreboardbywiechu.gamesSettings.GameSettings;
 
 
 //LAYOUT for football with specific methods
@@ -20,41 +22,46 @@ public class FootballActivity extends MainActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        // Pomijamy super.onCreate(savedInstanceState) z MainActivity i odwołujemy się bezpośrednio do AppCompatActivity
+        super.onCreate(savedInstanceState); // To wywołuje AppCompatActivity.onCreate(), pomijając MainActivity.onCreate()
+
+        initializeActivity();
+    }
+
+    private void initializeActivity() {
+        // Inicjalizacja specyficzna dla FootballActivity
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         String p1Name = getIntent().getStringExtra("p1");
         String p2Name = getIntent().getStringExtra("p2");
-        int halfTime = getIntent().getIntExtra("ht",45*60*1000);
-        int overtimeTime = getIntent().getIntExtra("otT",15*60*1000);
+        int halfTime = getIntent().getIntExtra("ht", 45 * 60 * 1000);
+        int overtimeTime = getIntent().getIntExtra("otT", 15 * 60 * 1000);
 
-        boolean randomExtraTimeFlag = getIntent().getBooleanExtra("retF",false);
-        boolean overtimeFlag = getIntent().getBooleanExtra("otF",false);
-        boolean penaltiesFlag = getIntent().getBooleanExtra("pF",false);
-        boolean goldGoalFlag = getIntent().getBooleanExtra("ggF",false);
+        boolean randomExtraTimeFlag = getIntent().getBooleanExtra("retF", false);
+        boolean overtimeFlag = getIntent().getBooleanExtra("otF", false);
+        boolean penaltiesFlag = getIntent().getBooleanExtra("pF", false);
+        boolean goldGoalFlag = getIntent().getBooleanExtra("ggF", false);
 
 
-        if(goldGoalFlag)
-        {
-            gameSettings = new FootballSettings(randomExtraTimeFlag,true);
-        }
-        else
-        {
-            gameSettings = new FootballSettings(randomExtraTimeFlag,overtimeFlag,penaltiesFlag,overtimeTime);
+
+        if (goldGoalFlag) {
+            gameSettings = new FootballSettings(randomExtraTimeFlag, true);
+        } else {
+            gameSettings = new FootballSettings(randomExtraTimeFlag, overtimeFlag, penaltiesFlag, overtimeTime);
         }
 
         gameSettings.addPlayer(new Player(p1Name));
         gameSettings.addPlayer(new Player(p2Name));
         gameSettings.setEndTime(halfTime);
 
+        //TODO: temporary
+        pointsCalculator = new PointsCalculator(Integer.MAX_VALUE, 0, 0, (byte) 0b100, gameSettings.getPlayers(), this);
+        gameSettings.setPointsCalculator(pointsCalculator);
+
         initializeViewElement();
         setLayout();
+
     }
 
     @Override
@@ -90,5 +97,14 @@ public class FootballActivity extends MainActivity{
         if(((FootballSettings) gameSettings).getIsGoldGoal())    //co ja tutaj zrobilem ma wykrywac zlota pilke i jesli wpadl gol zakoncz gre
             super.finishGame();
 
+    }
+
+    private void penalties()
+    {
+        pointsCalculator.setGameMode((byte) 0b110);
+        pointsCalculator.setDisplayPoints();
+        //w karnych wystepuja tury od nich wszystko sie ustala
+        //moze dodam taki system w pointcalculator i tam bedzie to ladnie dzialac
+        //TODO: system turowy
     }
 }

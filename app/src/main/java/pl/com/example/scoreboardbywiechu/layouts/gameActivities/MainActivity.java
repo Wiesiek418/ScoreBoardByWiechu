@@ -16,21 +16,23 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import pl.com.example.scoreboardbywiechu.R;
-import pl.com.example.scoreboardbywiechu.elements.PointsCalculator;
+import pl.com.example.scoreboardbywiechu.elements.points.PointsCalculator;
 import pl.com.example.scoreboardbywiechu.gamesSettings.GameSettings;
 import pl.com.example.scoreboardbywiechu.elements.GameTime;
 import pl.com.example.scoreboardbywiechu.elements.Player;
-import pl.com.example.scoreboardbywiechu.elements.Point;
+import pl.com.example.scoreboardbywiechu.elements.points.Point;
 import pl.com.example.scoreboardbywiechu.layouts.SelectionActivity;
 
+
+// MAIN ACTIVITY
+// HERE IS ONLY LOGIC FOR EVERY LAYOUT
+// The most universal layout is in DEFAULT LAYOUT
+// Here is only LOGIC
+
+//TODO: usunac elementy ktore sa tylko dla defaul i pozostawic te ktore sa wspolne dla wszystkich np. zegar i punkty oraz logika przyciskow
 public class MainActivity extends AppCompatActivity{
-    final int LAST_SCORE=10;    //const number of displays last scored
+
     private Button buttonPlusFirst; //button to add points for first player
     private Button buttonPlusSecond;    //button to add points for second player
     private Button buttonStart;         //button to start a timer and game
@@ -45,41 +47,23 @@ public class MainActivity extends AppCompatActivity{
     protected GameSettings gameSettings;    //object in which we have a game settings and his logic
     protected GameTime gameTime;            //object of the timer logic
 
-    private LinearLayout leftHistory;       //view to see last points of first player
-    private LinearLayout rightHistory;      //view to see last points of second player
+    public LinearLayout leftHistory;       //view to see last points of first player
+    public LinearLayout rightHistory;      //view to see last points of second player
 
 
-    private Player leftPlayer;              //info about first player
-    private Player rightPlayer;             //info about second player
+    public Player leftPlayer;              //info about first player
+    public Player rightPlayer;             //info about second player
 
     private TextView leftNameView;          //view to display a name of first player
     private TextView rightNameView;         //view to display a name of second player
 
-    private PointsCalculator pointsCalculator;
+    protected PointsCalculator pointsCalculator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        Player p1 = new Player("p1");
-        Player p2 = new Player("p2");
-        gameSettings = new GameSettings(2,2,10*1000);
-        gameSettings.addPlayer(p1);
-        gameSettings.addPlayer(p2);
-
-
-
-        initializeViewElement();
-        setLayout();
-
     }
+
 
     //initialization of the view element
     protected void initializeViewElement()
@@ -101,8 +85,6 @@ public class MainActivity extends AppCompatActivity{
         buttonStop = findViewById(R.id.Stop);
         buttonStartTime = findViewById(R.id.Start);
 
-        //temporary
-        pointsCalculator = new PointsCalculator(2,6,10,true,true,true,gameSettings.getPlayers(),this);
     }
 
 
@@ -226,79 +208,18 @@ public class MainActivity extends AppCompatActivity{
     //POINTS
     protected void addPoint(Player player)
     {
-        //gameSettings.addPointTo(player,gameTime.getElapsedTime());
         pointsCalculator.addPointToPlayer(player,gameTime.getElapsedTime());
-        //updateScore(gameSettings);
         pointsCalculator.displayScore();
     }
 
     protected void removePoint(Player player)
     {
-        //TODO: DODAC USUWANIE PUNKTOW
-        //gameSettings.removePointFrom(player);
-        //updateScore(gameSettings);
         pointsCalculator.removePointFromPlayer(player);
         pointsCalculator.displayScore();
     }
 
 
-    private <T extends GameSettings> void displayLastScore(T game)
-    {
-        int pVsize = game.getSizePointVector();
-        int lastScore=0;
-        leftHistory.removeAllViews();
-        rightHistory.removeAllViews();
-
-        if(pVsize<=LAST_SCORE)
-            lastScore=pVsize;
-        else
-            lastScore=LAST_SCORE;
-
-        for(int i=0;i<lastScore;i++)
-        {
-            Point point = gameSettings.getIndexPointVector(pVsize-i-1);
-            TextView scoreView = new TextView(this);
-            TextView scoreViewBlank = new TextView(this);
-
-            scoreView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            ));
-
-            scoreViewBlank.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            ));
-
-            scoreView.setBackgroundColor(ContextCompat.getColor(this,R.color.scorePoint));
-            int size = getResources().getDimensionPixelSize(R.dimen.pointSize);
-
-            scoreView.getLayoutParams().height=size;
-            scoreView.getLayoutParams().width=size;
-            scoreViewBlank.getLayoutParams().height=size;
-            scoreViewBlank.getLayoutParams().width=size;
-
-            scoreView.setText(String.valueOf(point.getNumPoint()));
-            scoreView.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-            scoreView.setGravity(Gravity.CENTER);
-
-
-            if(point.getPlayer().equals(leftPlayer))
-            {
-                leftHistory.addView(scoreView);
-                rightHistory.addView(scoreViewBlank);
-            }
-            else
-            {
-                rightHistory.addView(scoreView);
-                leftHistory.addView(scoreViewBlank);
-            }
-        }
-    }
-
-
     //TIMER
-
     private void startTime()
     {
         if(gameTime!=null)
