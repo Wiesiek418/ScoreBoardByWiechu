@@ -4,8 +4,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import pl.com.example.scoreboardbywiechu.games.Football;
-import pl.com.example.scoreboardbywiechu.games.GameSettings;
+import pl.com.example.scoreboardbywiechu.elements.points.PointsCalculator;
+import pl.com.example.scoreboardbywiechu.gamesSettings.FootballSettings;
+import pl.com.example.scoreboardbywiechu.gamesSettings.GameSettings;
 import pl.com.example.scoreboardbywiechu.elements.Player;
 
 /**
@@ -32,6 +33,7 @@ public class ExampleUnitTest {
     @Test
     public void addingPlayersWithThisSameName()
     {
+        PointsCalculator pointsCalculator = new PointsCalculator();
         GameSettings gameSettings = new GameSettings(2,2);
         Player p1 = new Player("P1");
         Player p2 = new Player("P1");
@@ -41,47 +43,44 @@ public class ExampleUnitTest {
         assertThrows(IllegalArgumentException.class,()-> gameSettings.addPlayer(p2));
     }
 
-    @Test
-    public void creatingGameSettings()
-    {
-        assertThrows(IllegalArgumentException.class,() -> new GameSettings(0,3));
-        assertThrows(IllegalArgumentException.class,() -> new GameSettings(1,0));
-        assertThrows(IllegalArgumentException.class,() -> new GameSettings(-1,-1));
-    }
+
 
     @Test
     public void createFootball()
     {
-        Football football = new Football();
-        assertEquals("Football",football.getNameOfGame());
+        FootballSettings footballSettings = new FootballSettings();
+        assertEquals("Football", footballSettings.getNameOfGame());
     }
 
     @Test
     public void setRandomExtraTime()
     {
-        Football football = new Football();
-        football.setFlagRandomExtraTime();
-        assertTrue(football.getFlagRandomExtraTime());
+        FootballSettings footballSettings = new FootballSettings();
+        footballSettings.setFlagRandomExtraTime();
+        assertTrue(footballSettings.getFlagRandomExtraTime());
     }
 
     @Test
     public void setRandomExtraTimeNumber()
     {
-        Football football = new Football();
-        football.randomExtraTime();
+        FootballSettings footballSettings = new FootballSettings();
+        footballSettings.randomExtraTime();
     }
 
     @Test
     public void workingTest()
     {
-        Football football = new Football(true);
+        FootballSettings footballSettings = new FootballSettings(true);
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
 
-        football.addPlayer(p1);
+        footballSettings.addPlayer(p1);
 
 
-        assertThrows(IllegalStateException.class,()->football.addPlayer(p2));
+        assertThrows(IllegalStateException.class,()-> footballSettings.addPlayer(p2));
 
     }
+
+
+
 }

@@ -31,19 +31,12 @@
             android:textSize="@dimen/nameTextSize"/>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scoreView"
-        android:layout_below="@id/nameLayout"
-        android:text="0:0"
-        android:textSize="50sp"
-        android:layout_centerHorizontal="true"/>
+    <include layout="@layout/display_points"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/scoreView"
+        android:layout_below="@+id/displayLayout"
         android:id="@+id/buttonPointsLayout"
         android:layout_centerHorizontal="true"
         >
@@ -80,7 +73,23 @@
                 android:layout_height="100dp"
                 android:id="@+id/deleteSecond"
                 android:text="-2"
+                android:layout_marginRight="10dp"
                 android:layout_toRightOf="@+id/deleteFirst"/>
+            <!-- STOP TYMCZASOWY -->
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/Stop"
+                android:text="STOP"
+
+                android:layout_toRightOf="@+id/deleteSecond"/>
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/Start"
+                android:text="START"
+
+                android:layout_toRightOf="@+id/Stop"/>
         </RelativeLayout>
     </RelativeLayout>
 

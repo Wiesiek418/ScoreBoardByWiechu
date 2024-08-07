@@ -14,26 +14,69 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/player_one_name"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/playerTwoName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/player_two_name"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/halfTimeLenght"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/half_time_lenght"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"/>
 
-    <Button
-        android:id="@+id/footballStartButton"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/overtimeLenght"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/start"
-        android:layout_marginTop="16dp" />
+        android:hint="@string/overtime_lenght"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"/>
+
+    <CheckBox
+        android:id="@+id/extraTimeCheck"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/random_extra_time_check"/>
+
+    <CheckBox
+        android:id="@+id/overtimeCheck"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/overtime_check"/>
+    <CheckBox
+        android:id="@+id/penaltiesCheck"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/penalty_check"/>
+    <CheckBox
+        android:id="@+id/goldgoalCheck"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/goldgoal_check"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="16dp">
+        <Button
+            android:id="@+id/footballStartButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start" />
+    </LinearLayout>
+
 </LinearLayout>

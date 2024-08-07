@@ -1,4 +1,4 @@
-package pl.com.example.scoreboardbywiechu.layouts;
+package pl.com.example.scoreboardbywiechu.layouts.gameActivities;
 
 import android.os.Bundle;
 
@@ -9,14 +9,18 @@ import androidx.core.view.WindowInsetsCompat;
 
 import pl.com.example.scoreboardbywiechu.R;
 import pl.com.example.scoreboardbywiechu.elements.Player;
-import pl.com.example.scoreboardbywiechu.games.Football;
-import pl.com.example.scoreboardbywiechu.games.GameSettings;
+import pl.com.example.scoreboardbywiechu.elements.points.PointsCalculator;
+import pl.com.example.scoreboardbywiechu.gamesSettings.GameSettings;
 
-public class PingPongActivity extends MainActivity {
-
+public class DefaultActivity extends MainActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initialize();
+    }
+
+    private void initialize()
+    {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -26,15 +30,27 @@ public class PingPongActivity extends MainActivity {
         });
 
         String p1Name = getIntent().getStringExtra("p1");
+        if(p1Name.isEmpty())
+        {
+            p1Name = "Guest1";
+        }
         String p2Name = getIntent().getStringExtra("p2");
-        int pointsToWin = getIntent().getIntExtra("ptws", 11);
-        int decidingPointsSet = getIntent().getIntExtra("dst", 15);
-        int setToWin = getIntent().getIntExtra("stw", 3);
+        if(p2Name.isEmpty())
+        {
+            p2Name = "Guest2";
+        }
 
-        gameSettings = new GameSettings(2, 2);
+        gameSettings = new GameSettings(2, 1);
         gameSettings.addPlayer(new Player(p1Name));
         gameSettings.addPlayer(new Player(p2Name));
+        gameSettings.setEndTime(Long.MAX_VALUE);
+
+        //TODO: temporary
+        pointsCalculator = new PointsCalculator(Integer.MAX_VALUE,0,0,(byte) 0b100,gameSettings.getPlayers(),this);
+        gameSettings.setPointsCalculator(pointsCalculator);
+
         initializeViewElement();
         setLayout();
     }
+
 }

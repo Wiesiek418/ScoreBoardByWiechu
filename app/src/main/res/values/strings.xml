@@ -3,13 +3,18 @@
     <string name="player_one_name">Player One Name</string>
     <string name="player_two_name">Player Two Name</string>
     <string name="half_time_lenght">Half Time Length (Minute)</string>
+    <string name="overtime_lenght">Overtime Length (Minute)</string>
     <string name="start">Start</string>
     <string name="set_win">Sets to win the game</string>
     <string name="point_set_win">Points to win set</string>
     <string name="deciding_set">Points in deciding set</string>
     <string name="football_title">Football</string>
     <string name="pingpong_title">PingPong</string>
-    <string name="invalid_number_error">Invalid half-time number. Please tap a decimal number</string>
+    <string name="invalid_number_error">Invalid time number. Please tap a decimal number</string>
     <string name="invalid_name_error">Invalid name. The player\'s name must be at least 5 words and cannot be empty.</string>
+    <string name="random_extra_time_check">Random extra time?</string>
+    <string name="overtime_check">Overtime?</string>
+    <string name="penalty_check">Penalties?</string>
+    <string name="goldgoal_check">Gold goal?</string>
 
 </resources>

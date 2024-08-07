@@ -1,11 +1,14 @@
-package pl.com.example.scoreboardbywiechu.games;
+package pl.com.example.scoreboardbywiechu.gamesSettings;
 
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 import pl.com.example.scoreboardbywiechu.elements.Pair;
 import pl.com.example.scoreboardbywiechu.elements.Player;
-import pl.com.example.scoreboardbywiechu.elements.Point;
+import pl.com.example.scoreboardbywiechu.elements.points.Point;
+import pl.com.example.scoreboardbywiechu.elements.points.PointsCalculator;
 
 public class GameSettings {
 
@@ -16,10 +19,12 @@ public class GameSettings {
     protected String nameOfGame = "Own Game";   //name of the game
     private Player[] playerVector;  //player vector in which we have players info
     private int currentPlayers=0;   //how many players we have in current game if the number of current players is less that number of players dont start the game
-    private Vector<Point> pointVector;
+
+    protected PointsCalculator pointsCalculator;
     protected long endTimeInMillis;
-    protected long extraTimeinMillis;
+    protected long extraTimeinMillis;       //nie lepiej dac tam gdzie potrzebne? moze zostac nie przeszkadza na razie
     protected boolean isSetExtraTime=false;
+
     //public function sector
     public GameSettings(int numOfPlayers, int parts)
     {
@@ -32,8 +37,7 @@ public class GameSettings {
         this.numberOfPlayers = numOfPlayers;
         this.numberOfParts = parts;
         this.playerVector = new Player[numOfPlayers];
-        pointVector = new Vector<>();
-
+        this.pointsCalculator = null;
     }
 
     public GameSettings(int numOfPlayers, int parts, long timeInMillis)
@@ -47,15 +51,14 @@ public class GameSettings {
         this.numberOfPlayers = numOfPlayers;
         this.numberOfParts = parts;
         this.playerVector = new Player[numOfPlayers];
-        pointVector = new Vector<>();
-
+        this.pointsCalculator = null;
     }
     //SETTER
     public void setEndTime(long timeInMillis)
     {
         this.endTimeInMillis=timeInMillis;
     }
-
+    public void setPointsCalculator(PointsCalculator pc) {this.pointsCalculator=pc;}
     //GETTER
     public int getNumberOfPlayers()
     {
@@ -78,7 +81,6 @@ public class GameSettings {
     public long getEndMinute() { return (this.endTimeInMillis/1000)/60; }               //regular end minute
     public long getEndSecond() { return (this.endTimeInMillis/1000)%60; }               //regular end seconds
 
-    public int getSizePointVector() { return this.pointVector.size(); }
     public int getCurrentPlayers() { return this.currentPlayers; }
     public int getCurrentPart() { return this.currentPart; }
     public boolean getExtraTimeIsSet() { return this.isSetExtraTime; }
@@ -91,14 +93,11 @@ public class GameSettings {
         return null;
     }
 
-    public Point getIndexPointVector(int i)
+    public List<Player> getPlayers()
     {
-        if(i<=pointVector.size())
-        {
-            return pointVector.get(i);
-        }
-        return null;
+        return Arrays.asList(playerVector);
     }
+
     //add Player to the game
     //numberOfPlayers == max number of players in game
     //currentPlayers == current number of players in game
@@ -148,89 +147,6 @@ public class GameSettings {
 
         nextPart();
         return false;
-    }
-
-
-
-
-    //SCORE SECTION
-    //GET SCORE as a Vector of pair in which we have a info about player and his score
-    //every element of this vector is about one player so the size of vector == number of the players
-    public Vector<Pair<Player, Integer>> getScore()
-    {
-        Vector<Pair<Player,Integer>> vectorScores = new Vector<>();
-        for(Player player:playerVector)
-        {
-            int score = player.getPoints();
-            Pair<Player,Integer> newPair = new Pair<>(player,score);
-            vectorScores.add(newPair);
-        }
-        return vectorScores;
-    }
-
-    //get a score table in which for one index is like one person and the element of this index is score from player class
-    public int[] summaryScore()
-    {
-        int[] score = new int[numberOfPlayers];
-
-        for(int i=0;i<numberOfPlayers;i++)
-        {
-            score[i]=this.playerVector[i].getPoints();
-        }
-        return score;
-    }
-
-    //removing last point from player
-    public void removePointFrom(Player player)
-    {
-        for(int i=0;i<numberOfPlayers;i++)
-        {
-            if(playerVector[i].equals(player))
-            {
-                playerVector[i].deletePoints();
-                removeFromPointsVector(player);
-            }
-        }
-    }
-
-    //add point to point Vector and to the player from player vector
-    //in point vector we get a Point class which has a info about who score, when and in which part
-    public void addPointTo(Player player, double time)
-    {
-        for(int i=0;i<numberOfPlayers;i++)
-        {
-            if(playerVector[i].equals(player))
-            {
-                playerVector[i].addPoints();    //add a point to the player class where we have a number of total points which player has
-                Point point = new Point(player,time,currentPart,playerVector[i].getPoints());
-                pointVector.add(point);
-            }
-        }
-    }
-
-    //get a summary score from one part for one player
-    private int scorePlayerForOnePart(Player player,int part)
-    {
-        int counter=0;
-        for(Point point: pointVector)
-        {
-            if(player.equals(point.getPlayer())&&point.getPart()==part)
-                counter++;
-        }
-        return counter;
-    }
-
-    //delete a last point from point vector in which is player id
-    private void removeFromPointsVector(Player player)
-    {
-        // we looking for a last point for player
-        for (int i = this.pointVector.size() - 1; i >= 0; i--) {
-            if (player.equals(this.pointVector.get(i).getPlayer()))
-            {
-                this.pointVector.remove(i);
-                return;
-            }
-        }
     }
 
 }

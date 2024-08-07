@@ -23,13 +23,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".layouts.FootballActivity">
-
+            android:name=".layouts.gameActivities.FootballActivity">
         </activity>
 
         <activity
-            android:name=".layouts.PingPongActivity">
+            android:name=".layouts.gameActivities.PingPongActivity">
+        </activity>
 
+        <activity
+            android:name=".layouts.gameActivities.DefaultActivity">
         </activity>
     </application>
 
