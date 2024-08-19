@@ -16,5 +16,6 @@
     <string name="overtime_check">Overtime?</string>
     <string name="penalty_check">Penalties?</string>
     <string name="goldgoal_check">Gold goal?</string>
+    <string name="title_activity_penalties">PenaltiesActivity</string>
 
 </resources>

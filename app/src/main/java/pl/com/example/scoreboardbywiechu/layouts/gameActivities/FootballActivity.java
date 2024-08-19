@@ -96,7 +96,7 @@ public class FootballActivity extends MainActivity{
         super.addPoint(player);
         if(((FootballSettings) gameSettings).getIsGoldGoal())    //co ja tutaj zrobilem ma wykrywac zlota pilke i jesli wpadl gol zakoncz gre
             super.finishGame();
-
+        //TODO: system karnych
     }
 
     private void penalties()

@@ -258,9 +258,8 @@ public class FootballSettings extends GameSettings{
     private boolean isDraw(int[] scores)
     {
         int curScore=scores[0];
-        for(int i=0;i<scores.length;i++)
-        {
-            if(curScore!=scores[i])
+        for (int score : scores) {
+            if (curScore != score)
                 return false;
         }
         return true;
